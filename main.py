@@ -16,6 +16,8 @@ def render_str(template, **params):
     return t.render(params)
 
 class BlogHandler(webapp2.RequestHandler):
+    def get(self):
+        self.render('front.html')
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
