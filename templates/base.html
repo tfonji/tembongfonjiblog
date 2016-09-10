@@ -1,20 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <title>Fonji | Personal Blog</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--for viewport, match screen's width in device independent pixels
+      and establish a 1:1 relationship between device independ pixels and css pixels-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--Bootstrap-->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <!--Material Design Bootstrap-->
     <link href="/css/mdb.min.css" rel="stylesheet">
     <!--Custom Styles. Last on list in order to avoid it being overriden-->
     <link type="text/css" rel="stylesheet" href="/css/styles.css">
-    <title>Fonji | Personal Blog</title>
   </head>
   <body>
 
-    <a href="/blog" class="main-title">Personal Blog</a>
-    <div id="content">
+
+
+    <div class="container">
+      <nav class="navbar navbar-light teal lighten-4">
+        <a class="navbar-brand" href="#">Blog</a>
+        <ul class="nav navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="/blog/newpost">New Post</a>
+          </li>
+        </ul>
+      </nav>
+    <div class="row">
+      <div class="col-md-12 text-left text-uppercase">
+        <a href="/blog" class="main-title">Personal Blog</a>
+      </div>
+    <div class="row" id="content">
+      <div class="col-md-7">
       {% block content %}
       {% endblock %}
     </div>
+    </div>
+      </div>
   </body>
 </html>
