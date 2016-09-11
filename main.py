@@ -26,7 +26,19 @@ def check_secure_val(secure_val):
 
 class BlogHandler(webapp2.RequestHandler):
     def get(self):
-        self.render('front.html')
+        self.render('login-form.html')
+
+    def post(self):
+        username = self.request.get('username')
+        password = self.request.get('password')
+
+        u = User.login(username, password)
+        if u:
+            self.login(u)
+            self.redirect('/welcome')
+        else:
+            msg = 'Invalid login'
+            self.render('login-form.html', error = msg)
 
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
@@ -48,7 +60,7 @@ class BlogHandler(webapp2.RequestHandler):
         cookie_val = self.request.cookies.get(name)
         return cookie_val and check_secure_val(cookie_val)
 
-    def login(self, user):
+    def set_login_cookie(self, user):
         self.set_secure_cookie('user_id', str(user.key().id()))
 
     def logout(self):
@@ -217,11 +229,6 @@ class Welcome(BlogHandler):
         else:
             self.redirect('/unit2/signup')
 
-
-"""class Unit2Signup(Signup):
-    def done(self):
-        self.redirect('/welcome?username=' + self.username)
-"""
 class Login(BlogHandler):
     def get(self):
         self.render('login-form.html')
@@ -232,7 +239,7 @@ class Login(BlogHandler):
 
         u = User.login(username, password)
         if u:
-            self.login(u)
+            self.set_login_cookie(u)
             self.redirect('/welcome')
         else:
             msg = 'Invalid login'
@@ -249,26 +256,17 @@ class Register(Signup):
             u = User.register(self.username, self.password, self.email)
             u.put()
 
-            self.login(u)
+            self.set_login_cookie(u)
             self.redirect('/welcome')
-
-
-
-
-
-
-
-
-
 
 app = webapp2.WSGIApplication([('/', BlogHandler),
                                ('/blog/?', BlogFront),
                                ('/blog/([0-9]+)', PostPage),
                                ('/blog/newpost', NewPost),
-                               ('/signup', Register),
+                               ('/unit2/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-                               ('/welcome', Welcome),
+                               ('/unit2/welcome', Welcome),
                                ],
                               debug=True)
 

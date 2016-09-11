@@ -19,6 +19,13 @@ h2 {
     font-weight: bold;
     margin-bottom: 20px;
 }
+#login-form{
+  padding-top: 20px;
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  width:100%;
+}
 
 .error {
     color: red;

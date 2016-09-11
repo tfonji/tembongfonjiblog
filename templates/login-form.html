@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-md-6" id="login-form">
+
+<!--Form with header-->
+<div class="card">
+    <div class="card-block">
+
+        <!--Header-->
+        <div class="form-header  purple darken-4">
+            <h3><i class="fa fa-lock"></i> Login:</h3>
+        </div>
+
+        <!--Body-->
+        <form method="post">
+
+
+        <div class="md-form">
+            <i class="fa fa-envelope prefix"></i>
+            <input type="text" placeholder="username" id="form2" class="form-control" name="username" value="{{username}}">
+            <label for="form2"></label>
+        </div>
+
+        <div class="md-form">
+            <i class="fa fa-lock prefix"></i>
+            <input type="password" placeholder="password" name="password" value="" id="form4" class="form-control">
+            <label for="form4"></label>
+        </div>
+
+        <div class="text-xs-center">
+            <button type="submit" class="btn btn-deep-purple">Login</button>
+        </div>
+        </form>
+
+    </div>
+
+    <!--Footer-->
+    <div class="modal-footer">
+        <div class="options error">
+            <p>Not a member? <a href="/unit2/signup">Sign Up</a></p>
+            <p>{{error}}</p>
+        </div>
+    </div>
+
+</div>
+<!--/Form with header-->
+
+</div>
+{% endblock %}
