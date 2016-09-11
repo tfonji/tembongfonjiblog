@@ -27,6 +27,7 @@ def check_secure_val(secure_val):
 class BlogHandler(webapp2.RequestHandler):
     def get(self):
         self.render('front.html')
+
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -83,18 +84,6 @@ def valid_pw(name, password, h):
 def users_key(group = 'default'):
     return db.Key.from_path('users', group)
 
-USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
-def valid_username(username):
-    return username and USER_RE.match(username)
-
-PASS_RE = re.compile(r"^.{3,20}$")
-def valid_password(password):
-    return password and PASS_RE.match(password)
-
-EMAIL_RE  = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
-def valid_email(email):
-    return not email or EMAIL_RE.match(email)
-
 class User(db.Model):
     name = db.StringProperty(required = True)
     pw_hash = db.StringProperty(required = True)
@@ -123,10 +112,64 @@ class User(db.Model):
         if u and valid_pw(name, pw, u.pw_hash):
             return u
 
-class Logout(BlogHandler):
+class Post(db.Model):
+    subject = db.StringProperty(required = True)
+    content = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
+    last_modified = db.DateTimeProperty(auto_now = True)
+
+    def render(self):
+        self._render_text = self.content.replace('\n', '<br>')
+        return render_str("post.html", p = self)
+
+class BlogFront(BlogHandler):
     def get(self):
-        self.logout()
-        self.redirect('/signup')
+        posts = db.GqlQuery("select * from Post order by created desc limit 10")
+        self.render('front.html', posts = posts)
+
+class PostPage(BlogHandler):
+    def get(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+
+        if not post:
+            self.error(404)
+            return
+
+        self.render("permalink.html", post = post)
+
+class NewPost(BlogHandler):
+    def get(self):
+        self.render("newpost.html")
+
+    def post(self):
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+
+        if subject and content:
+            p = Post(parent = blog_key(), subject = subject, content = content)
+            p.put()
+            self.redirect('/blog/%s' % str(p.key().id()))
+        else:
+            error = "subject and content, please!"
+            self.render("newpost.html", subject=subject, content=content, error=error)
+
+USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+def valid_username(username):
+    return username and USER_RE.match(username)
+
+PASS_RE = re.compile(r"^.{3,20}$")
+def valid_password(password):
+    return password and PASS_RE.match(password)
+
+EMAIL_RE  = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
+def valid_email(email):
+    return not email or EMAIL_RE.match(email)
+
+class Logout(BlogHandler):
+  def get(self):
+    self.logout()
+    self.redirect('/unit2/signup')
 
 class Signup(BlogHandler):
 
@@ -161,26 +204,24 @@ class Signup(BlogHandler):
         if have_error:
             self.render('signup-form.html', **params)
         else:
-            self.done()
+            self.redirect('/unit2/welcome?username=' + username)
 
     def done(self, *a, **kw):
         raise NotImplementedError
 
+class Welcome(BlogHandler):
+    def get(self):
+        username = self.request.get('username')
+        if valid_username(username):
+            self.render('welcome.html', username = username)
+        else:
+            self.redirect('/unit2/signup')
 
-class Post(db.Model):
-    subject = db.StringProperty(required = True)
-    content = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
-    last_modified = db.DateTimeProperty(auto_now = True)
 
-    def render(self):
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p = self)
-
-class Unit2Signup(Signup):
+"""class Unit2Signup(Signup):
     def done(self):
         self.redirect('/welcome?username=' + self.username)
-
+"""
 class Login(BlogHandler):
     def get(self):
         self.render('login-form.html')
@@ -211,44 +252,13 @@ class Register(Signup):
             self.login(u)
             self.redirect('/welcome')
 
-class Welcome:
-    def get(self):
-        if self.user:
-            self.rener('welcome.html', username = self.user.name)
-        else:
-            self.redirect('/signup')
 
-class BlogFront(BlogHandler):
-    def get(self):
-        posts = db.GqlQuery("select * from Post order by created desc limit 10")
-        self.render('front.html', posts = posts)
 
-class PostPage(BlogHandler):
-    def get(self, post_id):
-        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
-        post = db.get(key)
 
-        if not post:
-            self.error(404)
-            return
 
-        self.render("permalink.html", post = post)
 
-class NewPost(BlogHandler):
-    def get(self):
-        self.render("newpost.html")
 
-    def post(self):
-        subject = self.request.get('subject')
-        content = self.request.get('content')
 
-        if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content)
-            p.put()
-            self.redirect('/blog/%s' % str(p.key().id()))
-        else:
-            error = "subject and content, please!"
-            self.render("newpost.html", subject=subject, content=content, error=error)
 
 
 app = webapp2.WSGIApplication([('/', BlogHandler),

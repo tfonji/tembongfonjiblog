@@ -15,10 +15,8 @@
     <link type="text/css" rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
-
-
-
     <div class="container">
+      <div class="row">
       <nav class="navbar navbar-light teal lighten-4">
         <a class="navbar-brand" href="#">Blog</a>
         <ul class="nav navbar-nav">
@@ -27,16 +25,16 @@
           </li>
         </ul>
       </nav>
+      </div>
     <div class="row">
       <div class="col-md-12 text-left text-uppercase">
         <a href="/blog" class="main-title">Personal Blog</a>
       </div>
     <div class="row" id="content">
-      <div class="col-md-7">
       {% block content %}
       {% endblock %}
     </div>
-    </div>
+
       </div>
   </body>
 </html>
