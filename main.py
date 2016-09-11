@@ -52,7 +52,7 @@ class BlogHandler(webapp2.RequestHandler):
     def set_secure_cookie(self, name, val):
         cookie_val = make_secure_val(val)
         self.response.headers.add_header(
-            'Set-Cookie',
+            'set-cookie',
             '%s=%s; Path=/' % (name, cookie_val)
         )
 
