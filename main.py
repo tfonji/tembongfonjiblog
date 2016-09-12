@@ -216,7 +216,6 @@ class Logout(BlogHandler):
         self.logout()
         self.redirect('/unit2/signup')
 
-
 class Signup(BlogHandler):
 
     def get(self):
