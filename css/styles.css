@@ -1,13 +1,10 @@
-img,
-embed,
-object,
-video {
+img, embed, object, video {
     max-width: 100%;
 }
+
 body {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
-
     max-width: 100%;
     margin: 0 auto;
     padding: 10px;
@@ -19,12 +16,13 @@ h2 {
     font-weight: bold;
     margin-bottom: 20px;
 }
-#login-form{
-  padding-top: 20px;
-  display: flex;
-  justify-content:center;
-  align-items: center;
-  width:100%;
+
+#login-form {
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .error {
@@ -32,11 +30,11 @@ h2 {
 }
 
 label {
-  display: block;
-  font-size: 20px;
+    display: block;
+    font-size: 20px;
 }
 
-label + label {
+label+label {
     margin-top: 20px;
 }
 
@@ -48,14 +46,14 @@ input[type=text] {
 }
 
 textarea {
-  width: 500px;
-  height: 400px;
-  font-size: 17px;
-  font-family: monospace;
+    width: 500px;
+    height: 400px;
+    font-size: 17px;
+    font-family: monospace;
 }
 
 input[type=submit] {
-  font-size: 24px;
+    font-size: 24px;
 }
 
 .main-title {
@@ -68,7 +66,7 @@ input[type=submit] {
     text-decoration: none;
 }
 
-.post + .post {
+.post+.post {
     margin-top: 15px;
 }
 
@@ -87,7 +85,6 @@ input[type=submit] {
     right: 0px;
     bottom: 0px;
     color: #999;
-
 }
 
 .post-content {
