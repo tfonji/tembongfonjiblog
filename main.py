@@ -4,6 +4,9 @@ from string import letters
 
 import webapp2
 import jinja2
+import hashlib
+import hmac
+import random
 
 from google.appengine.ext import db
 
@@ -21,7 +24,7 @@ def make_secure_val(val):
 
 def check_secure_val(secure_val):
     val = secure_val.split('|')[0]
-    if secure_val == make_secure_val:
+    if secure_val == make_secure_val(val):
         return val
 
 class BlogHandler(webapp2.RequestHandler):
@@ -34,7 +37,7 @@ class BlogHandler(webapp2.RequestHandler):
 
         u = User.login(username, password)
         if u:
-            self.login(u)
+            self.set_login_cookie(u)
             self.redirect('/welcome')
         else:
             msg = 'Invalid login'
@@ -52,7 +55,7 @@ class BlogHandler(webapp2.RequestHandler):
     def set_secure_cookie(self, name, val):
         cookie_val = make_secure_val(val)
         self.response.headers.add_header(
-            'set-cookie',
+            'Set-ookie',
             '%s=%s; Path=/' % (name, cookie_val)
         )
 
@@ -111,7 +114,8 @@ class User(db.Model):
         return u
 
     @classmethod
-    def register(cls, name, pw, email = None):
+    def register(name, pw, email = None):
+        print "hello"
         pw_hash = make_pw_hash(name, pw)
         return User(parent = users_key(),
                     name = name,
@@ -218,8 +222,18 @@ class Signup(BlogHandler):
         else:
             self.redirect('/unit2/welcome?username=' + username)
 
-    def done(self, *a, **kw):
-        raise NotImplementedError
+    def done(self):
+        #check if user exists
+        u = User.by_name(username)
+        if u:
+            msg = 'This user already exists.'
+            self.render('signup-form.html', error_username = msg)
+        else:
+            u = User.register(self.username, self.password, self.email)
+            u.put()
+
+            self.set_login_cookie(u)
+            self.redirect('/unit2/welcome')
 
 class Welcome(BlogHandler):
     def get(self):
@@ -245,25 +259,11 @@ class Login(BlogHandler):
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)
 
-class Register(Signup):
-    def done(self):
-        #check if user exists
-        u = User.by_name(self.username)
-        if u:
-            msg = 'This user already exists.'
-            self.render('signup-form.html', error_username = msg)
-        else:
-            u = User.register(self.username, self.password, self.email)
-            u.put()
-
-            self.set_login_cookie(u)
-            self.redirect('/welcome')
-
 app = webapp2.WSGIApplication([('/', BlogHandler),
                                ('/blog/?', BlogFront),
                                ('/blog/([0-9]+)', PostPage),
                                ('/blog/newpost', NewPost),
-                               ('/unit2/signup', Register),
+                               ('/unit2/signup', Signup),
                                ('/login', Login),
                                ('/logout', Logout),
                                ('/unit2/welcome', Welcome),
