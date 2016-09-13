@@ -1,70 +1,50 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<html>
-  <head>
-    <title>Unit 2 Rot 13</title>
-    <style type="text/css">
-      .label {text-align: right}
-      .error {color: red}
-    </style>
+{% block content %}
 
-  </head>
+<div class="col-md-6 login-form">
+<!--Form with header-->
+<div class="card">
+    <div class="card-block">
 
-  <body>
-    <h2>Signup</h2>
-    <form method="post">
-      <table>
-        <tr>
-          <td class="label">
-            Username
-          </td>
-          <td>
-            <input type="text" name="username" value="{{username}}">
-          </td>
-          <td class="error">
-            {{error_username}}
-          </td>
-        </tr>
+        <!--Header-->
+        <div class="form-header blue-gradient">
+            <h3><i class="fa fa-user"></i> Register:</h3>
+        </div>
 
-        <tr>
-          <td class="label">
-            Password
-          </td>
-          <td>
-            <input type="password" name="password" value="">
-          </td>
-          <td class="error">
-            {{error_password}}
-          </td>
-        </tr>
+        <!--Body-->
+        <form method="post">
+        <div class="md-form">
+            <i class="fa fa-user prefix"></i>
+            <input type="text" name="username" placeholder="name" value="{{username}}" id="form3" class="form-control">
+        </div>
+        <div class="md-form">
+            <i class="fa fa-lock prefix"></i>
+            <input type="password" name="password" value="" id="form4" placeholder="password" class="form-control">
 
-        <tr>
-          <td class="label">
-            Verify Password
-          </td>
-          <td>
-            <input type="password" name="verify" value="">
-          </td>
-          <td class="error">
-            {{error_verify}}
-          </td>
-        </tr>
+        </div>
+        <div class="md-form">
+            <i class="fa fa-lock prefix"></i>
+            <input type="password" id="form4" name="verify" value="" placeholder="verify password" class="form-control">
+        </div>
 
-        <tr>
-          <td class="label">
-            Email (optional)
-          </td>
-          <td>
-            <input type="text" name="email" value="{{email}}">
-          </td>
-          <td class="error">
-            {{error_email}}
-          </td>
-        </tr>
-      </table>
+        <div class="md-form">
+            <i class="fa fa-envelope prefix"></i>
+            <input type="text" id="form2" placeholder="email" name="email" value="{{email}}" class="form-control">
+        </div>
 
-      <input type="submit">
+        <div class="text-xs-center text-center">
+            <button class="btn btn-indigo">Sign up</button>
+            <hr>
+            <fieldset class="form-group">
+            <p>{{error_username}}</p> <p>{{error_password}}</p> <p>{{error_verify}}</p> <p>{{error_email}}</p>
+            </fieldset>
+        </div>
     </form>
-  </body>
 
-</html>
+    </div>
+</div>
+</div>
+<!--/Form with header-->
+
+{% endblock %}

@@ -17,7 +17,7 @@ h2 {
     margin-bottom: 20px;
 }
 
-#login-form {
+.login-form {
     padding-top: 20px;
     display: flex;
     justify-content: center;
@@ -88,5 +88,5 @@ input[type=submit] {
 }
 
 .post-content {
-    margin-top: 5px;
+    margin: 5px 0;
 }

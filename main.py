@@ -33,21 +33,6 @@ def check_secure_val(secure_val):
 
 class BlogHandler(webapp2.RequestHandler):
 
-    def get(self):
-        self.render('login-form.html')
-
-    def post(self):
-        username = self.request.get('username')
-        password = self.request.get('password')
-
-        u = User.login(username, password)
-        if u:
-            self.set_login_cookie(u)
-            self.redirect('/welcome')
-        else:
-            msg = 'Invalid login'
-            self.render('login-form.html', error=msg)
-
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -60,7 +45,7 @@ class BlogHandler(webapp2.RequestHandler):
     def set_secure_cookie(self, name, val):
         cookie_val = make_secure_val(val)
         self.response.headers.add_header(
-            'Set-ookie',
+            'Set-Cookie',
             '%s=%s; Path=/' % (name, cookie_val)
         )
 
@@ -117,17 +102,16 @@ class User(db.Model):
     email = db.StringProperty()
 
     @classmethod
-    def by_id(cls, uid):
+    def by_id(self, uid):
         return User.get_by_id(uid, parent=users_key())
 
     @classmethod
-    def by_name(cls, name):
-        u = User.all().filter('name=', name).get()
+    def by_name(self, name):
+        u = User.all().filter('name =', name).get()
         return u
 
     @classmethod
-    def register(name, pw, email=None):
-        print "hello"
+    def register(self, name, pw, email=None):
         pw_hash = make_pw_hash(name, pw)
         return User(parent=users_key(),
                     name=name,
@@ -135,8 +119,8 @@ class User(db.Model):
                     email=email)
 
     @classmethod
-    def login(cls, name, pw):
-        u = cls.by_name(name)
+    def login(self, name, pw):
+        u = self.by_name(name)
         if u and valid_pw(name, pw, u.pw_hash):
             return u
 
@@ -214,7 +198,7 @@ class Logout(BlogHandler):
 
     def get(self):
         self.logout()
-        self.redirect('/unit2/signup')
+        self.redirect('/signup')
 
 class Signup(BlogHandler):
 
@@ -223,62 +207,66 @@ class Signup(BlogHandler):
 
     def post(self):
         have_error = False
-        username = self.request.get('username')
-        password = self.request.get('password')
-        verify = self.request.get('verify')
-        email = self.request.get('email')
+        self.username = self.request.get('username')
+        self.password = self.request.get('password')
+        self.verify = self.request.get('verify')
+        self.email = self.request.get('email')
 
-        params = dict(username=username,
-                      email=email)
+        params = dict(username = self.username,
+                      email = self.email)
 
-        if not valid_username(username):
+        if not valid_username(self.username):
             params['error_username'] = "That's not a valid username."
             have_error = True
 
-        if not valid_password(password):
+        if not valid_password(self.password):
             params['error_password'] = "That wasn't a valid password."
             have_error = True
-        elif password != verify:
+        elif self.password != self.verify:
             params['error_verify'] = "Your passwords didn't match."
             have_error = True
 
-        if not valid_email(email):
+        if not valid_email(self.email):
             params['error_email'] = "That's not a valid email."
             have_error = True
 
         if have_error:
             self.render('signup-form.html', **params)
         else:
-            self.redirect('/unit2/welcome?username=' + username)
+            self.done()
+    def done(self, *a, **kw):
+        raise NotImplementedError
+
+class Register(Signup):
 
     def done(self):
         # check if user exists
-        u = User.by_name(username)
+        u = User.by_name(self.username)
         if u:
             msg = 'This user already exists.'
-            self.render('signup-form.html', error_username=msg)
+            self.render('signup-form.html', error_username = msg)
         else:
             u = User.register(self.username, self.password, self.email)
             u.put()
 
             self.set_login_cookie(u)
-            self.redirect('/unit2/welcome')
+            self.redirect('/')
 
 
-class Welcome(BlogHandler):
-
-    def get(self):
-        username = self.request.get('username')
-        if valid_username(username):
-            self.render('welcome.html', username=username)
-        else:
-            self.redirect('/unit2/signup')
+# class Welcome(BlogHandler):
+#
+#     def get(self):
+#         username = self.request.get('username')
+#         if valid_username(username):
+#             self.render('welcome.html', username=username)
+#         else:
+#             self.redirect('/signup')
 
 
 class Login(BlogHandler):
 
     def get(self):
-        self.render('login-form.html')
+        self.render('login-form.html', error = self.request.get('error'))
 
     def post(self):
         username = self.request.get('username')
@@ -287,21 +275,104 @@ class Login(BlogHandler):
         u = User.login(username, password)
         if u:
             self.set_login_cookie(u)
-            self.redirect('/welcome')
+            self.redirect('/blog/newpost')
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error=msg)
 
-app = webapp2.WSGIApplication([('/', BlogHandler),
-                               ('/blog/?', BlogFront),
+app = webapp2.WSGIApplication([('/?', BlogFront),
                                ('/blog/([0-9]+)', PostPage),
                                ('/blog/newpost', NewPost),
-                               ('/unit2/signup', Signup),
+                               ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-                               ('/unit2/welcome', Welcome),
                                ],
                               debug=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # s
