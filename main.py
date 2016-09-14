@@ -20,9 +20,11 @@ def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
 
+
 def render_str2(self, template, **params):
     params['user'] = self.user
     return render_str(template, **params)
+
 
 def make_secure_val(val):
     return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
@@ -40,7 +42,9 @@ class BlogHandler(webapp2.RequestHandler):
         self.response.out.write(*a, **kw)
 
     def render_str(self, template, **params):
-        return render_str(template, **params)
+        params['user'] = self.user
+        t = jinja_env.get_template(template)
+        return t.render(params)
 
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
@@ -142,6 +146,7 @@ class Post(db.Model):
 class BlogFront(BlogHandler):
 
     def get(self):
+
         posts = db.GqlQuery(
             "select * from Post order by created desc limit 10")
         self.render('front.html', posts=posts)
@@ -163,7 +168,10 @@ class PostPage(BlogHandler):
 class NewPost(BlogHandler):
 
     def get(self):
-        self.render("newpost.html")
+        if self.user:
+            self.render("newpost.html")
+        else:
+            self.redirect("/login")
 
     def post(self):
         subject = self.request.get('subject')
@@ -203,6 +211,7 @@ class Logout(BlogHandler):
         self.logout()
         self.redirect('/')
 
+
 class Signup(BlogHandler):
 
     def get(self):
@@ -215,8 +224,8 @@ class Signup(BlogHandler):
         self.verify = self.request.get('verify')
         self.email = self.request.get('email')
 
-        params = dict(username = self.username,
-                      email = self.email)
+        params = dict(username=self.username,
+                      email=self.email)
 
         if not valid_username(self.username):
             params['error_username'] = "That's not a valid username."
@@ -237,8 +246,10 @@ class Signup(BlogHandler):
             self.render('signup-form.html', **params)
         else:
             self.done()
+
     def done(self, *a, **kw):
         raise NotImplementedError
+
 
 class Register(Signup):
 
@@ -247,7 +258,7 @@ class Register(Signup):
         u = User.by_name(self.username)
         if u:
             msg = 'This user already exists.'
-            self.render('signup-form.html', error_username = msg)
+            self.render('signup-form.html', error_username=msg)
         else:
             u = User.register(self.username, self.password, self.email)
             u.put()
@@ -269,7 +280,7 @@ class Register(Signup):
 class Login(BlogHandler):
 
     def get(self):
-        self.render('login-form.html', error = self.request.get('error'))
+        self.render('login-form.html', error=self.request.get('error'))
 
     def post(self):
         username = self.request.get('username')
@@ -293,91 +304,6 @@ app = webapp2.WSGIApplication([('/?', BlogFront),
                                ('/logout', Logout),
                                ],
                               debug=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # s

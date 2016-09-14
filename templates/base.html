@@ -20,9 +20,10 @@
     <div class="container">
       <div class="row">
       <nav class="navbar navbar-light teal lighten-4">
-        {% if logged_in == True %}
+        <div class="container-fluid">
+        {% if user %}
           <a class="navbar-brand" href="#">{{user.name}}</a>
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-right">
             <li class="nav-item">
               <a class="nav-link" href="/blog/newpost">new post</a>
             </li>
@@ -35,7 +36,7 @@
           </ul>
         {% else %}
           <a class="navbar-brand" href="#">Blog</a>
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-right">
             <li class="nav-item">
               <a class="nav-link" href="/login">Login</a>
             </li>
@@ -44,8 +45,10 @@
             </li>
           </ul>
         {% endif %}
+        </div>
       </nav>
       </div>
+
     <div class="row">
       <div class="col-md-12 text-left text-uppercase">
         <a class="main-title">Personal Blog</a>
