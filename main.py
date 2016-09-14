@@ -20,6 +20,9 @@ def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
 
+def render_str2(self, template, **params):
+    params['user'] = self.user
+    return render_str(template, **params)
 
 def make_secure_val(val):
     return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
@@ -198,7 +201,7 @@ class Logout(BlogHandler):
 
     def get(self):
         self.logout()
-        self.redirect('/signup')
+        self.redirect('/')
 
 class Signup(BlogHandler):
 
@@ -274,11 +277,13 @@ class Login(BlogHandler):
 
         u = User.login(username, password)
         if u:
+            logged_in = True
             self.set_login_cookie(u)
             self.redirect('/blog/newpost')
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error=msg)
+            logged_in = False
 
 app = webapp2.WSGIApplication([('/?', BlogFront),
                                ('/blog/([0-9]+)', PostPage),
