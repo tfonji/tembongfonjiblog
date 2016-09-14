@@ -3,10 +3,10 @@
 {% block content %}
 
   {% for p in posts %}
-  <div class="row">
+
     {{ p.render() | safe}}
     <br><br>
-  </div>
+
 
   {% endfor %}
 

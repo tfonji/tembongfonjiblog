@@ -11,6 +11,10 @@ body {
     color: #333;
 }
 
+.container{
+    overflow-wrap: break-word;
+    
+}
 h2 {
     font-size: 24px;
     font-weight: bold;
@@ -64,6 +68,9 @@ input[type=submit] {
     text-align: center;
     margin-bottom: 30px;
     text-decoration: none;
+}
+#set-height{
+    height:60px;
 }
 
 .post+.post {
