@@ -283,7 +283,7 @@ class Login(BlogHandler):
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error=msg)
-            logged_in = False
+
 
 app = webapp2.WSGIApplication([('/?', BlogFront),
                                ('/blog/([0-9]+)', PostPage),
