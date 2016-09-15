@@ -290,7 +290,7 @@ class Login(BlogHandler):
         if u:
             logged_in = True
             self.set_login_cookie(u)
-            self.redirect('/blog/newpost')
+            self.redirect('/')
         else:
             msg = 'Invalid login'
             self.render('login-form.html', error=msg)

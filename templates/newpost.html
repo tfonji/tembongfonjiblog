@@ -1,9 +1,15 @@
 {% extends "base.html" %}
+{% set active_page = "newpost" %}
+
+{% set navigation_bar = [
+    ('/', 'index', 'Most Recent Posts'),
+    ('/blog/newpost', 'newpost', 'new post')
+] -%}
 
 {% block content %}
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12 main-title">
     <h2> enter a new post</h2>
   </div>
 </div>

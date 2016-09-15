@@ -13,7 +13,14 @@ body {
 
 .container{
     overflow-wrap: break-word;
-    
+
+}
+
+.navbar-fixed-top .navbar-nav > .active > a {
+    background-color: #fff;
+}
+#navbar-color{
+    background-color: #FFD54F;
 }
 h2 {
     font-size: 24px;
