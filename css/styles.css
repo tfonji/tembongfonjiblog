@@ -2,6 +2,7 @@ img, embed, object, video {
     max-width: 100%;
 }
 
+
 body {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -14,6 +15,14 @@ body {
 .container{
     overflow-wrap: break-word;
 
+}
+#align-p{
+    text-align: center;
+}
+
+.align-right {
+    text-align:right;
+    float: right;
 }
 
 .navbar-fixed-top .navbar-nav > .active > a {
