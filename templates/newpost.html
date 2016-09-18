@@ -1,34 +1,36 @@
 {% extends "base.html" %}
 {% set active_page = "newpost" %}
-{% set navigation_bar = [ ('/', 'index', 'Most Recent Posts'),
-                          ('/blog/newpost', 'newpost', 'new post')
-                        ] -%}
+
+{% set navigation_bar = [
+    ('/', 'index', 'Most Recent Posts'),
+    ('/blog/newpost', 'newpost', 'new post')
+] -%}
 
 {% block content %}
 
 <div class="row">
-    <div class="col-md-12 main-title">
-        <h2> enter a new post</h2>
-    </div>
+  <div class="col-md-12 main-title">
+    <h2> enter a new post</h2>
+  </div>
 </div>
 <div class="row" style="text-align:center">
 
     <form method="post">
-        <label>
+      <label>
         <div>subject</div>
         <input type="text" name="subject" value="{{subject}}">
       </label>
 
-        <label>
+      <label>
         <div>blog</div>
         <div>
         <textarea  id="mycontent" rows="10" name="content">{{content}}</textarea>
         </div>
       </label>
 
-        <div class="error">{{error}}</div>
+      <div class="error">{{error}}</div>
 
-        <input type="submit">
+      <input type="submit">
     </form>
 
 </div>
