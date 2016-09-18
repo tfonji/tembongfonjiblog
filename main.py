@@ -15,6 +15,15 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 secret = '34f95fjklufir94mfk*&$0r9f09'
 
+def render_str(template, **params):
+    t = jinja_env.get_template(template)
+    return t.render(params)
+
+
+def render_str2(self, template, **params):
+    params['user'] = self.user
+    return render_str(template, **params)
+
 def make_secure_val(val):
     return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
 

@@ -1,13 +1,16 @@
-<div class="post">
-  <div class="post-heading">
-    <div class="post-title">
-      <a href="/blog/{{ p.key().id() }}#">{{p.subject}}</a>
+<div class="post col-md-12">
+
+    <div class="row">
+        <div class="col-md-7">
+            <h3 class="post-heading">
+                <a href="/blog/{{p.key().id()}}#" class="post-title">{{p.subject}}</a>
+            </h3>
+        </div>
     </div>
-    <div class="post-date">
-      {{p.created.strftime("%b %d, %Y")}}
+    <p class="post-content">{{p._render_text | safe}}</p>
+    <div class="row">
+        <div class="col-md-12">
+        <small class="post-date" style="padding-top:10px">(Posted on {{p.created.strftime("%b %d, %Y")}} by {{p.getUserName()}})</small>
     </div>
-  </div>
-  <div class="post-content">
-    {{p._render_text | safe}}
-  </div>
+    </div>
 </div>

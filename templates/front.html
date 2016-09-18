@@ -2,74 +2,23 @@
 
 {% block content %}
 
-  {% for p in posts %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if deleted_post_id %}
+                <div class="alert alert-success" role="alert">
+                    <span class="glyphicon glyphicon-success" aria-hidden="true"></span>
+                    Post deleted successully
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
-    {{ p.render() | safe }}
-    <br><br>
-
-
-  {% endfor %}
+    {% for p in posts %}
+        {% if p.key().id()|string != deleted_post_id|string %}
+        <div class="row">
+            {{ p.render() | safe }}
+        </div>
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- hello -->

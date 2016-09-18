@@ -11,29 +11,39 @@ body {
     color: #333;
 }
 
-.container{
+.container {
     overflow-wrap: break-word;
-
 }
 
-.navbar-fixed-top .navbar-nav > .active > a {
+.post-content {
+    margin: 15px 0;
+    padding-bottom: 15px;
+}
+
+.post-heading {
+    padding-top: 25px;
+}
+
+.navbar-fixed-top .navbar-nav>.active>a {
     background-color: #fff;
 }
-#navbar-color{
+
+#navbar-color {
     background-color: #FFD54F;
 }
+
 h2 {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
 }
 
-#align-p{
+#align-p {
     text-align: center;
 }
 
 .align-right {
-    text-align:right;
+    text-align: right;
     float: right;
 }
 
@@ -85,8 +95,9 @@ input[type=submit] {
     margin-bottom: 30px;
     text-decoration: none;
 }
-#set-height{
-    height:60px;
+
+#set-height {
+    height: 60px;
 }
 
 .post+.post {
