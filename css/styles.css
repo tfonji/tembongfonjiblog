@@ -28,6 +28,15 @@ h2 {
     margin-bottom: 20px;
 }
 
+#align-p{
+    text-align: center;
+}
+
+.align-right {
+    text-align:right;
+    float: right;
+}
+
 .login-form {
     padding-top: 20px;
     display: flex;

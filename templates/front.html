@@ -1,15 +1,10 @@
-{% extends "base.html"%}
-{% set active_page = "index" %}
+{% extends "base.html" %}
 
-{% set navigation_bar = [
-    ('/', 'index', 'most recent posts'),
-    ('/blog/newpost', 'newpost', 'New Post')
-] -%}
 {% block content %}
 
   {% for p in posts %}
 
-    {{ p.render() | safe}}
+    {{ p.render() | safe }}
     <br><br>
 
 

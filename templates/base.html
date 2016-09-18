@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<link rel="import" href="./main.py">
+<link rel="import">
 <html lang="en">
   <head>
     <title>Fonji | Personal Blog</title>
@@ -23,35 +23,21 @@
         <nav class="navbar navbar-fixed-top navbar-light lighten-4" id="navbar-color">
         <div class="container-fluid">
         {% if user %}
-          <a class="navbar-brand" href="#">{{user.name}}</a>
-          <ul class="nav navbar-nav navbar-right">
-            {% for href, id, caption in navigation_bar %}
-            {% if id == active_page %}
-            <li class="nav-item active">
-              <a href="{{ href|e }}">{{ caption|e }}</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a href="{{ href|e }}">{{ caption|e }}</a>
-            </li>
-
-            {% endif %}
-            {% endfor %}
-            <li class="nav-item">
-              <a class="nav-link" href="/logout">Logout</a>
-            </li>
-          </ul>
+        <div class="row">
+          <div class="col-md-12">
+            <button type="button" class="btn btn-primary">{{user.name}}</button>
+            <a class="btn btn-deep-orange align-right" href="/logout">logout</a>
+            <a class="btn teal darken-3 align-right" href="/">recent posts</a>
+            <a class="btn  blue darken-3 align-right" href="/blog/newpost">new post</a>
+          </div>
+        </div>
         {% else %}
-          <a class="navbar-brand" href="#">Blog</a>
-          <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item">
-
-              <a class="nav-link" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/signup">Signup</a>
-            </li>
-          </ul>
+        <div class="row">
+        <div class="col-md-12">
+          <button type="button" class="btn btn-primary">blog</button>
+          <a class="btn btn-unique align-right" href="/signup">signup</a>
+          <a class="btn btn-dark-green align-right" href="/login">login</a>
+        </div>
         {% endif %}
         </div>
       </nav>
