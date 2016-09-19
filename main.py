@@ -7,6 +7,7 @@ import jinja2
 import hashlib
 import hmac
 import random
+import time
 
 from google.appengine.ext import db
 
@@ -134,6 +135,7 @@ class Post(db.Model):
     content = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
+    likes = db.IntegerProperty(default = 0)
 
     def getUserName(self):
         """
@@ -160,64 +162,104 @@ class PostPage(BlogHandler):
     def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
-        comments = db.GqlQuery("select * from Comment where post_id = " +
-                               post_id + " order by created desc")
-
-        likes = db.GqlQuery("select * from Like where post_id="+post_id)
-
+        comments = Comment.gql("WHERE post_id = %s ORDER BY created DESC" % int(post_id))
+        liked = None
+        if self.user:
+            liked = Like.gql("WHERE post_id = :1 AND user_id = :2", int(post_id), self.user.name).get()
         if not post:
             self.error(404)
             return
-
-        error = self.request.get('error')
-
-        self.render("permalink.html", post=post, numberoflikes=likes.count(),
-                    comments=comments, error=error)
-
+        self.render("permalink.html", post = post, comments = comments, liked = liked)
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
-
-        if not post:
-            self.error(404)
-            return
-
-        c = ""
-        if(self.user):
-            # On clicking like, post-like value increases.
-            if(self.request.get('like') and
-               self.request.get('like') == "update"):
-                likes = db.GqlQuery("select * from Like where post_id = " +
-                                    post_id + " and user_id = " +
-                                    str(self.user.key().id()))
-
-                if self.user.key().id() == post.user_id:
-                    self.redirect("/blog/" + post_id +
-                                  "?error=You cannot like your " +
-                                  "post.")
-                    return
-                elif likes.count() == 0:
-                    l = Like(parent=blog_key(), user_id=self.user.key().id(),
-                             post_id=int(post_id))
-                    l.put()
-
-            if(self.request.get('comment')):
-                c = Comment(parent=blog_key(), user_id=self.user.key().id(),
-                            post_id=int(post_id),
-                            comment=self.request.get('comment'))
-                c.put()
+        if self.request.get("like"):
+            # User liked post
+            if post and self.user:
+                post.likes += 1
+                like = Like(post_id = int(post_id), user_id = self.user.key().id())
+                like.put()
+                post.put()
+                time.sleep(0.2)
+            self.redirect("/blog/%s" % post_id)
+        elif self.request.get("unlike"):
+            # User unliked post
+            if post and self.user:
+                post.likes -= 1
+                like = Like.gql("WHERE post_id = :1 AND user_id = :2", int(post_id), self.user.name).get()
+                key = like.key
+                key.delete()
+                post.put()
+                time.sleep(0.2)
+            self.redirect("/blog/%s" % post_id)
         else:
-            self.redirect("/login?error= please login first.")
-            return
+            # User commented on post
+            content = self.request.get("content")
+            if content:
+                comment = Comment(content = str(content), user_id = self.user, post_id = int(post_id))
+                comment.put()
+                time.sleep(0.1)
+                self.redirect("/blog/%s" % post_id)
+            else:
+                self.render("permalink.html", post = post)
 
-        comments = db.GqlQuery("select * from Comment where post_id = " +
-                               post_id + "order by created desc")
+    # def get(self, post_id):
+    #     key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+    #     post = db.get(key)
+    #     comments = db.GqlQuery("select * from Comment where post_id = " +
+    #                            post_id + " order by created desc")
+    #     liked = None
+    #     if self.user:
+    #         liked = Like.gql("where post_id = :1 and user_id = :2", int(post_id), self.user.name).get()
+    #
+    #     if not post:
+    #         self.error(404)
+    #         return
+    #
+    #     error = self.request.get('error')
+    #
+    #     self.render("permalink.html", post=post, liked=liked,
+    #                 comments=comments, error=error)
+    #
+    # def post(self, post_id):
+    #     key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+    #     post = db.get(key)
+    #
+    #     if self.request.get("like"):
+    #         #user likes post
+    #         if post and self.user:
+    #             post.likes += 1
+    #             like = Like(post_id = int(post_id), user_id = self.user.key().id())
+    #             like.put()
+    #             post.put()
+    #             time.sleep(0.2)
+    #         self.redirect("/blog/%s" % post_id)
+    #     elif self.request.get("unlike"):
+    #         #user unlikes post
+    #         if post and self.user:
+    #             post.likes -= 1
+    #             like = like.gql("where post_id = :1 and user_id = :2", int(post_id), self.user.username).get()
+    #             key = like.key
+    #             key.delete()
+    #             post.put()
+    #             time.sleep(0.2)
+    #         self.redirect("/blog/%s" % post_id)
+    #     else:
+    #         # User commented on post
+    #         content = self.request.get("content")
+    #         if content:
+    #             comment = Comment(content = str(content), author = self.user, post_id = int(post_id))
+    #             comment.put()
+    #             time.sleep(0.1)
+    #             self.redirect("/blog/%s" % post_id)
+    #         else:
+    #             self.render("permalink.html", post = post)
+    #
+    #
+    #     if not post:
+    #         self.error(404)
+    #         return
 
-        likes = db.GqlQuery("select * from Like where post_id="+post_id)
-
-        self.render("permalink.html", post=post,
-                    comments=comments, numberoflikes=likes.count(),
-                    new=c)
 
 
 class NewPost(BlogHandler):
@@ -395,9 +437,6 @@ class Like(db.Model):
     user_id = db.IntegerProperty(required=True)
     post_id = db.IntegerProperty(required=True)
 
-    def getUserName(self):
-        user = User.by_id(self.user_id)
-        return user.name
 
 class Comment(db.Model):
     user_id = db.IntegerProperty(required=True)
