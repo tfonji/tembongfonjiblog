@@ -15,6 +15,11 @@ body {
     overflow-wrap: break-word;
 }
 
+.comment-form{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
 .post-content {
     margin: 15px 0;
     padding-bottom: 15px;
