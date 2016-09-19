@@ -8,15 +8,15 @@
     </div>
 
     <div class="col-md-12">
-        <form method="post" role="form">
+        <form method="post">
 
             <input type="hidden" id="post_id" name="post_id" value="{{post_id}}">
-            
+
             <div class="form-group">
                 <label for="subject">Comment:</label>
                 <input type="text" class="form-control" id="comment" name="comment" value="{{comment}}">
             </div>
-           
+
             {% if error %}
             <div class="alert alert-danger" role="alert">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
