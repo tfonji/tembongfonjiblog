@@ -15,7 +15,7 @@
 
     {% for p in posts %}
         {% if p.key().id()|string != deleted_post_id|string %}
-        <div class="row">
+        <div class="row" id="front-styles">
             {{ p.render() | safe }}
         </div>
         {% endif %}

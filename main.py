@@ -15,6 +15,7 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 secret = '34f95fjklufir94mfk*&$0r9f09'
 
+
 def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
@@ -24,13 +25,16 @@ def render_str2(self, template, **params):
     params['user'] = self.user
     return render_str(template, **params)
 
+
 def make_secure_val(val):
     return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
+
 
 def check_secure_val(secure_val):
     val = secure_val.split('|')[0]
     if secure_val == make_secure_val(val):
         return val
+
 
 class BlogHandler(webapp2.RequestHandler):
 
@@ -72,8 +76,8 @@ def render_post(response, post):
     response.out.write('<b>' + post.subject + '</b><br>')
     response.out.write(post.content)
 
-# blog stuff
 
+# hash paswword
 
 def blog_key(name='default'):
     return db.Key.from_path('blogs', name)
@@ -97,6 +101,8 @@ def valid_pw(name, password, h):
 
 def users_key(group='default'):
     return db.Key.from_path('users', group)
+
+# User class.
 
 
 class User(db.Model):
@@ -126,6 +132,8 @@ class User(db.Model):
         u = self.by_name(name)
         if u and valid_pw(name, pw, u.pw_hash):
             return u
+
+# Blog Post Class
 
 
 class Post(db.Model):
@@ -236,7 +244,8 @@ class NewPost(BlogHandler):
         content = self.request.get('content')
 
         if subject and content:
-            p = Post(parent=blog_key(), user_id=self.user.key().id(), subject=subject, content=content)
+            p = Post(parent=blog_key(), user_id=self.user.key().id(),
+                     subject=subject, content=content)
             p.put()
             self.redirect('/blog/%s' % str(p.key().id()))
         else:
@@ -318,9 +327,11 @@ class DeletePost(BlogHandler):
                 post.delete()
                 self.redirect("/?deleted_post_id="+post_id)
             else:
-                self.redirect("/blog/" + post_id + "?error=You don't haver permission to delete this post.")
+                self.redirect("/blog/" + post_id + "?error=You don't have" +
+                              "permission to delete this post.")
         else:
             self.redirect("/login?error=Please login first.")
+
 
 class EditPost(BlogHandler):
     def get(self, post_id):
@@ -331,7 +342,8 @@ class EditPost(BlogHandler):
                 self.render("editpost.html", subject=post.subject,
                             content=post.content)
             else:
-                self.redirect("/blog/" + post_id + "?error=You don't have permission to edit this post")
+                self.redirect("/blog/" + post_id + "?error=You don't have" +
+                              "permission to edit this post")
         else:
             self.redirect("/login?error=Please login first")
 
@@ -391,6 +403,7 @@ class DeleteComment(BlogHandler):
         else:
             self.redirect("/login?error=Please login first")
 
+
 class Like(db.Model):
     user_id = db.IntegerProperty(required=True)
     post_id = db.IntegerProperty(required=True)
@@ -398,6 +411,7 @@ class Like(db.Model):
     def getUserName(self):
         user = User.by_id(self.user_id)
         return user.name
+
 
 class Comment(db.Model):
     user_id = db.IntegerProperty(required=True)
@@ -410,6 +424,7 @@ class Comment(db.Model):
         user = User.by_id(self.user_id)
         return user.name
 
+
 class EditComment(BlogHandler):
     def get(self, post_id, comment_id):
         if self.user:
@@ -420,7 +435,7 @@ class EditComment(BlogHandler):
                 self.render("editcomment.html", comment=c.comment)
             else:
                 self.redirect("/blog/" + post_id +
-                              "?error=You don't have permission to edit this " +
+                              "?error=You don't have permission to edit this" +
                               "comment.")
         else:
             self.redirect("/login?error=Please login first")
@@ -445,6 +460,7 @@ class EditComment(BlogHandler):
             error = "subject and content, please!"
             self.render("editpost.html", subject=subject,
                         content=content, error=error)
+
 
 class Login(BlogHandler):
 
@@ -479,30 +495,3 @@ app = webapp2.WSGIApplication([('/?', BlogFront),
                                ('/logout', Logout),
                                ],
                               debug=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# s
