@@ -1,12 +1,11 @@
-import os
-import re
-from string import letters
-
-import webapp2
-import jinja2
 import hashlib
 import hmac
+import jinja2
+import os
 import random
+import re
+from string import letters
+import webapp2
 
 from google.appengine.ext import db
 
@@ -144,9 +143,7 @@ class Post(db.Model):
     last_modified = db.DateTimeProperty(auto_now=True)
 
     def getUserName(self):
-        """
-            Gets username of the person, who wrote the blog post.
-        """
+        """Gets username of the person, who wrote the blog post."""
         user = User.by_id(self.user_id)
         return user.name
 
@@ -159,7 +156,7 @@ class BlogFront(BlogHandler):
 
     def get(self):
         deleted_post_id = self.request.get('deleted_post_id')
-        posts = greetings = Post.all().order('-created')
+        posts = Post.all().order('-created')
         self.render('front.html', posts=posts, deleted_post_id=deleted_post_id)
 
 
@@ -348,9 +345,7 @@ class EditPost(BlogHandler):
             self.redirect("/login?error=Please login first")
 
     def post(self, post_id):
-        """
-        Updates post.
-        """
+        """Updates post."""
         if not self.user:
             self.redirect('/blog')
 
@@ -441,9 +436,8 @@ class EditComment(BlogHandler):
             self.redirect("/login?error=Please login first")
 
     def post(self, post_id, comment_id):
-        """
-        Updates post.
-        """
+
+        """Updates post."""
         if not self.user:
             self.redirect('/blog')
 
@@ -458,8 +452,8 @@ class EditComment(BlogHandler):
             self.redirect('/blog/%s' % post_id)
         else:
             error = "subject and content, please!"
-            self.render("editpost.html", subject=subject,
-                        content=content, error=error)
+            self.render("editpost.html",
+                        content=comment, error=error)
 
 
 class Login(BlogHandler):
@@ -473,7 +467,6 @@ class Login(BlogHandler):
 
         u = User.login(username, password)
         if u:
-            logged_in = True
             self.set_login_cookie(u)
             self.redirect('/')
         else:

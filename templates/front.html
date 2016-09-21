@@ -1,24 +1,19 @@
 {% extends "base.html" %}
-
 {% block content %}
-
-    <div class="row">
-        <div class="col-md-12">
-            {% if deleted_post_id %}
-                <div class="alert alert-success" role="alert">
-                    <span class="glyphicon glyphicon-success" aria-hidden="true"></span>
-                    Post deleted successully
-                </div>
-            {% endif %}
-        </div>
+<div class="row">
+  <div class="col-md-12">
+    {% if deleted_post_id %}
+    <div class="alert alert-success" role="alert">
+      Post deleted successully
     </div>
-
-    {% for p in posts %}
-        {% if p.key().id()|string != deleted_post_id|string %}
-        <div class="row" id="front-styles">
-            {{ p.render() | safe }}
-        </div>
-        {% endif %}
-    {% endfor %}
-
+    {% endif %}
+  </div>
+</div>
+{% for p in posts %}
+{% if p.key().id()|string != deleted_post_id|string %}
+<div class="row" id="front-styles">
+  {{ p.render() | safe }}
+</div>
+{% endif %}
+{% endfor %}
 {% endblock %}

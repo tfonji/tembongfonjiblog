@@ -1,16 +1,15 @@
 <div class="post col-md-12">
-
-    <div class="row">
-        <div class="col-md-7">
-            <h3 class="post-heading">
-                <a href="/blog/{{p.key().id()}}#" class="post-title">{{p.subject}}</a>
-            </h3>
-        </div>
+  <div class="row">
+    <div class="col-md-7">
+      <h3 class="post-heading">
+        <a href="/blog/{{p.key().id()}}#" class="post-title">{{p.subject}}</a>
+      </h3>
     </div>
-    <p class="post-content">{{p._render_text | safe}}</p>
-    <div class="row">
-        <div class="col-md-12">
-        <small class="post-date" id="front-styles" style="padding-top:10px">(Posted on {{p.created.strftime("%b %d, %Y")}} by {{p.getUserName()}})</small>
+  </div>
+  <p class="post-content">{{p._render_text | safe}}</p>
+  <div class="row">
+    <div class="col-md-12">
+      <small class="post-date" id="front-styles" style="padding-top:10px">(Posted on {{p.created.strftime("%b %d, %Y")}} by {{p.getUserName()}})</small>
     </div>
-    </div>
+  </div>
 </div>
