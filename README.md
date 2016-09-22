@@ -1,8 +1,7 @@
 #[tembongfonjiblog](https://tembongfonjiblog.appspot.com/)
 This is a multi-user blog hosted on Google App Engine. In this project users can create accounts, login, create
 posts as well as comments and like on other users' posts.
-This project is one of many projects to be completed
-in order to be awarded the Udacity Full Stack Web Developer Nanodegree. You can run the project online at the following link:
+You can run the project online at the following link:
 [https://tembongfonjiblog.appspot.com/](https://tembongfonjiblog.appspot.com/)
 
 ## Project Files and Folders
