@@ -346,11 +346,12 @@ class EditPost(BlogHandler):
 
     def post(self, post_id):
         """Updates post."""
-        if not self.user:
-            self.redirect('/blog')
-
-        subject = self.request.get('subject')
-        content = self.request.get('content')
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+        getName = post.getUserName()
+        if post and getName == self.user.name:
+            subject = self.request.get('subject')
+            content = self.request.get('content')
 
         if subject and content:
             key = db.Key.from_path('Post', int(post_id), parent=blog_key())
