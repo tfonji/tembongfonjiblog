@@ -340,7 +340,7 @@ class EditPost(BlogHandler):
                             content=post.content)
             else:
                 self.redirect("/blog/" + post_id + "?error=You don't have" +
-                              "permission to edit this post")
+                              " permission to edit this post")
         else:
             self.redirect("/login?error=Please login first")
 
@@ -394,8 +394,8 @@ class DeleteComment(BlogHandler):
                 self.redirect("/blog/"+post_id+"?deleted_comment_id=" +
                               comment_id)
             else:
-                self.redirect("/blog/" + post_id + "?error=You don't have " +
-                              "permission to delete this comment.")
+                self.redirect("/blog/" + post_id + "?error=You don't have" +
+                              " permission to delete this comment.")
         else:
             self.redirect("/login?error=Please login first")
 

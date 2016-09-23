@@ -17,6 +17,13 @@
       </div>
       {% endif %}
       <button type="submit" class="btn btn-success">Submit</button>
+      <button class="btn btn-info btn-rounded" onclick="goBack()">Cancel and go Back</button>
+
+      <script>
+          function goBack() {
+              window.history.back();
+          }
+      </script>
     </form>
   </div>
 </div>
