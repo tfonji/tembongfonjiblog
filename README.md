@@ -1,6 +1,7 @@
 #[tembongfonjiblog](https://tembongfonjiblog.appspot.com/)
 This is a multi-user blog hosted on Google App Engine. In this project users can create accounts, login, create
-posts as well as comments and like on other users' posts.
+posts as well as comments and like on other users' posts. Also, control on blog enteries and comments is limited,
+depending on who the user is and who the author of the content is.
 You can run the project online at the following link:
 [https://tembongfonjiblog.appspot.com/](https://tembongfonjiblog.appspot.com/)
 
