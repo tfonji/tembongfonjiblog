@@ -11,6 +11,7 @@ body {
     margin: 0 auto;
     padding: 10px;
     color: #333;
+    background-color: #B2DFDB
 }
 #front-styles {
     padding-left: 20px;
@@ -96,8 +97,9 @@ input[type=submit] {
     border-bottom: 3px solid #666;
 }
 .post-title {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
+    font-family: 'Quicksand', sans-serif;
 }
 .post-date {
     position: absolute;
@@ -107,4 +109,6 @@ input[type=submit] {
 }
 .post-content {
     margin: 5px 0;
+    font-family: 'Coming Soon', cursive;
+    font-size: 20px;
 }
